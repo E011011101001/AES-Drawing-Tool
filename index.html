@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/vuetify/2.2.13/vuetify.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+          <h3>一、选数并加密</h3>
+          <p>加密部分的内容请注意保存。该部分每个宿舍只需完成一次，请各宿舍内部自行协商。</p>
+          <p>1. 首先，请从 {0, 1, 2, 3, 4, 5} 六个自然数中任选一个填入下方输入框中。你也可以点击点击右侧按钮产生随机数。</p>
+          <div class="random-container" style="width: 20em;">
+            <v-text-field
+              color="blue darken-2"
+              label="您所选的数字"
+              :rules="nRule"
+              v-model="n"
+            ></v-text-field>
+            <v-btn
+              class="button text-none"
+              @click="nGen"
+            >
+              Random
+            </v-btn>
+          </div>
+          <p>2. 之后请在下方输入 32 个(大写）十六进制字符作为密钥（即 128 位）。你可以使用任选的 32 个数字，也可以点击右侧按钮产生随机的密钥。</p>
+          <div class="random-container" style="width: 30em;">
+            <v-text-field
+              color="blue darken-2"
+              label="密钥"
+              :rules="keyRule"
+              v-model="key"
+              clearable
+            ></v-text-field>
+            <v-btn
+              class="button text-none"
+              @click="keyGen"
+            >
+              Random
+            </v-btn>
+          </div>
+          <p>注意：请保存好您所选的数字和密钥，一旦遗忘将无法产生抽签结果。离开或刷新界面后，由于本页面并未储存您的信息，数字和密钥均会清空。</p>
+          <p>3. 点击加密后，将密文复制到班群即可。注意密钥的保密。</p>
+          <v-btn
+            class="text-none"
+            style="top:0.5em; left:0.5em"
+            color="primary"
+            @click="encrypt"
+          >加密</v-btn>
+          <v-textarea
+            class="cipher"
+            height="5em"
+            solo disabled no-resize
+            v-model="cipherText"
+            label="密文"
+          ></v-textarea>
+          <h3>三、密钥公开</h3>
+          待达到公开时间且三个宿舍的密文均公开后，各个宿舍再将密钥公开到班群中。
+          <h3>二、结果查询</h3>
+          <p>将三组密文和密钥分别填入下方对应位置后即可得到最终结果。任何人可检验。若与最终公示结果不符，请及时指正。</p>
+          <div>
+            <decrypt-box
+              v-for="i in [0, 1, 2]"
+              :key="i"
+              :pos="i"
+              @result_change="change_result"
+              ref="debox"
+            />
+          </div>
+          <div>
+            <p>({{ results[0] }} + {{ results[1] }} + {{ results[2] }}) mod 6 = {{ sum }}</p>
+            <p>当三组密文和密钥均填写完毕后，公示表（下表）的最终结果所在行将会高亮显示</p>
+            <v-data-table
+              :headers="headers"
+              :items="desserts"
+              class="elevation-1"
+              hide-default-footer
+            >
+              <template v-slot:item="{ item, headers, index }">
+                <tr
+                  :class="{ red: index === sum }"
+                >
+                  <td v-for="header in headers">
+                    {{ item[header.value] }}
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </div>
+
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
+
+
+
+  <script src="https://cdn.bootcss.com/vue/2.6.11/vue.js"></script>
+  <script src="https://cdn.bootcss.com/vuetify/2.2.13/vuetify.js"></script>
+  <script src="https://cdn.bootcss.com/aes-js/3.1.2/index.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

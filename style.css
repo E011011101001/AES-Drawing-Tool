@@ -1,0 +1,48 @@
+h3 {
+  padding-top: 0.5em;
+}
+
+p {
+  margin-bottom: 0em !important;
+}
+
+.random-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.button {
+  top: 1em;
+  left: 1em;
+}
+
+textarea {
+  color: black !important;
+}
+
+.cipher {
+  margin-top: 1em !important;
+  width: 30em;
+}
+
+.result-span {
+  margin-top: 1.3em;
+  width: 10em;
+}
+
+.decrypt-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.decrypt-cipher {
+  width: 30em;
+  margin-right: 3em;
+}
+
+.decrypt-key {
+  width: 30em;
+  margin-right: 1em;
+}
